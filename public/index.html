@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>YT Downloader</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+	<style>
+		* { box-sizing: border-box; }
+		:root { --bg1:#0f172a; --bg2:#1e293b; --primary:#7c3aed; --accent:#22d3ee; --accent2:#f472b6; --text:#e2e8f0; --muted:#94a3b8; }
+		body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; margin:0; min-height:100vh; color:var(--text); background: radial-gradient(1200px 800px at 10% 10%, #0ea5e9 0%, transparent 50%), radial-gradient(1100px 700px at 90% 0%, #a78bfa 0%, transparent 50%), radial-gradient(900px 600px at 50% 100%, #f472b6 0%, transparent 50%), linear-gradient(180deg, var(--bg1), var(--bg2)); background-attachment:fixed; }
+		.wrapper { position:relative; isolation:isolate; min-height:100vh; display:grid; place-items:center; padding:32px 16px; }
+		.blur-orb { position:absolute; inset:0; pointer-events:none; z-index:0; }
+		.card { position:relative; z-index:1; width:100%; max-width:760px; border-radius:20px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.12); box-shadow:0 20px 60px rgba(0,0,0,0.35); backdrop-filter: blur(16px) saturate(140%); padding:28px; }
+		.header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
+		.brand { display:flex; align-items:center; gap:12px; }
+		.logo { width:40px; height:40px; border-radius:12px; background:conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent2), var(--primary), var(--accent)); box-shadow:0 10px 30px rgba(124,58,237,0.5); }
+		h1 { font-size:24px; margin:0; letter-spacing:0.2px; }
+		.tag { color:var(--muted); font-size:13px; }
+		.hero { margin:8px 0 22px; font-weight:600; font-size:28px; line-height:1.2; background:linear-gradient(90deg, #fff, #d4d4ff, #ffe3f2); -webkit-background-clip:text; background-clip:text; color:transparent; }
+		.desc { margin:0 0 18px; color:var(--muted); }
+		.form { display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; }
+		.input, .select { width:100%; padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.14); background:rgba(2,6,23,0.6); color:var(--text); outline:none; transition:border .2s, box-shadow .2s, background .2s; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+		.input:focus, .select:focus { border-color: rgba(124,58,237,0.7); box-shadow:0 0 0 6px rgba(124,58,237,0.18); background:rgba(2,6,23,0.72); }
+		.button { padding:14px 18px; border-radius:14px; border:0; color:white; font-weight:700; letter-spacing:.3px; cursor:pointer; background: linear-gradient(135deg, #7c3aed, #22d3ee 60%, #f472b6); box-shadow:0 10px 30px rgba(34,211,238,0.35); transition: transform .12s ease, box-shadow .2s; }
+		.button:hover { transform: translateY(-1px); box-shadow:0 14px 34px rgba(34,211,238,0.5); }
+		.button:active { transform: translateY(0); }
+		.meta { margin-top:14px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+		.badges { display:flex; gap:8px; }
+		.badge { padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); font-weight:600; color:#e9e7ff; }
+		.footer { margin-top:22px; color:var(--muted); font-size:12px; }
+		@media (max-width: 780px) { .form { grid-template-columns: 1fr 1fr; } .button { grid-column: 1 / -1; } }
+		@media (max-width: 520px) { .form { grid-template-columns: 1fr; } }
+		.dev-banner { margin-top:22px; text-align:center; font-weight:800; font-size:clamp(22px,5vw,36px); line-height:1.15; letter-spacing:0.4px; background: linear-gradient(90deg, #ffffff, #a5b4fc, #f9a8d4, #22d3ee, #ffffff); background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation: bannerShift 8s linear infinite, bannerGlow 2.2s ease-in-out infinite alternate; filter: drop-shadow(0 6px 24px rgba(124,58,237,0.25)); }
+		@keyframes bannerShift { 0% { background-position:0% 50%; } 100% { background-position:300% 50%; } }
+		@keyframes bannerGlow { 0% { text-shadow:0 0 12px rgba(124,58,237,0.35), 0 0 24px rgba(34,211,238,0.15);} 100% { text-shadow:0 0 22px rgba(244,114,182,0.55), 0 0 38px rgba(34,211,238,0.35);} }
+		.option-hidden { display:none; }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="blur-orb" aria-hidden="true"></div>
+		<div class="card">
+			<div class="header">
+				<div class="brand">
+					<div class="logo"></div>
+					<div>
+						<h1>YT Downloader</h1>
+					</div>
+				</div>
+			</div>
+			<div class="hero">Download YouTube videos in a click</div>
+			<p class="desc">Paste a valid link, choose quality, and download.</p>
+			<form class="form" action="/download" method="GET" target="_blank">
+				<input class="input" id="url" name="url" type="url" placeholder="https://www.youtube.com/watch?v=..." required />
+				<select class="select" id="q" name="q">
+					<option value="auto" selected>Auto</option>
+					<option value="144">144p</option>
+					<option value="240">240p</option>
+					<option value="360">360p</option>
+					<option value="480">480p</option>
+					<option value="720">720p (HD)</option>
+					<option value="1080">1080p (Full HD)</option>
+					<option value="1440">1440p (2K)</option>
+					<option value="2160">2160p (4K)</option>
+				</select>
+				<button class="button" type="submit">Download</button>
+			</form>
+			<div class="meta">
+				<div class="badges">
+					<div class="badge">Secure</div>
+					<div class="badge">Fast</div>
+					<div class="badge">No Signup</div>
+				</div>
+			</div>
+			<div class="dev-banner">Developed by Malik Hamdan</div>
+		</div>
+	</div>
+	<script>
+		const urlInput = document.getElementById('url');
+		const qSelect = document.getElementById('q');
+		const API_BASE = (window.API_BASE || (document.querySelector('meta[name="api-base"]') && document.querySelector('meta[name="api-base"]').content) || '').replace(/\/$/, '');
+
+		async function updateQualityOptions() {
+			const url = urlInput.value.trim();
+			if (!url) return;
+			try {
+				const res = await fetch(`${API_BASE || ''}/formats?url=${encodeURIComponent(url)}`);
+				if (!res.ok) return; // keep defaults
+				const data = await res.json();
+				const max = data.maxHeight || null;
+				Array.from(qSelect.options).forEach((opt) => {
+					if (opt.value === 'auto') { opt.classList.remove('option-hidden'); return; }
+					const h = parseInt(opt.value, 10);
+					if (!Number.isFinite(h)) { opt.classList.remove('option-hidden'); return; }
+					if (max && h > max) { opt.classList.add('option-hidden'); }
+					else { opt.classList.remove('option-hidden'); }
+				});
+				// If selected option is now hidden, revert to Auto
+				if (qSelect.selectedOptions[0] && qSelect.selectedOptions[0].classList.contains('option-hidden')) {
+					qSelect.value = 'auto';
+				}
+			} catch (_) { /* ignore */ }
+		}
+
+		urlInput.addEventListener('blur', updateQualityOptions);
+		urlInput.addEventListener('change', updateQualityOptions);
+
+		// Handle cross-origin backend by constructing URL manually
+		const formEl = document.querySelector('form.form');
+		if (formEl) {
+			formEl.addEventListener('submit', (e) => {
+				const videoUrl = urlInput.value.trim();
+				if (!videoUrl) return; // let required attribute handle it
+				const q = qSelect.value || 'auto';
+				const href = `${API_BASE || ''}/download?url=${encodeURIComponent(videoUrl)}&q=${encodeURIComponent(q)}`;
+				// Always open in new tab as before
+				window.open(href, '_blank');
+				e.preventDefault();
+			});
+		}
+	</script>
+</body>
+</html> 
